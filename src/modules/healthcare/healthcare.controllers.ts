@@ -9,6 +9,8 @@ import {
 import {
   healthcareSignUpSchema,
   healthcareLoginSchema,
+  CreatePatientInput,
+  createPatientSchema,
 } from "./healthcare.validations";
 import {
   HealthcareUserInput,
@@ -54,6 +56,31 @@ export const healthcareLogin = async (req: Request, res: Response) => {
       message: result.message,
       data: result.data,
     });
+  } catch (err: any) {
+    if (err instanceof ZodError) {
+      return errorResponse(res, {
+        statusCode: 400,
+        message: "Validation error",
+        details: err.issues,
+      });
+    }
+
+    return errorResponse(res, {
+      statusCode: err.statusCode || 500,
+      message: err.message || "Unexpected error",
+      details: process.env.NODE_ENV === "development" ? err.stack : undefined,
+    });
+  }
+};
+
+export const createPatient = async (req: Request, res: Response) => {
+  try {
+    const validatedData: CreatePatientInput = createPatientSchema.parse(
+      req.body
+    );
+    const result = await healthcareServices.createPatient(validatedData);
+
+    return successResponse(res, result);
   } catch (err: any) {
     if (err instanceof ZodError) {
       return errorResponse(res, {

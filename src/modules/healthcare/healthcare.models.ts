@@ -150,9 +150,10 @@ PatientData.init(
       allowNull: true,
     },
     allergies: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
+      type: DataTypes.JSON,
       allowNull: true,
     },
+
     medicalHistory: {
       type: DataTypes.TEXT,
       allowNull: true,

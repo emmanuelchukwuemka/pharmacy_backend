@@ -94,9 +94,10 @@ LabTestsCatalogue.init(
       allowNull: true,
     },
     preparationInstructions: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
+      type: DataTypes.JSON,
       allowNull: true,
     },
+
     availability: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

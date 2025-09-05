@@ -1,7 +1,7 @@
 import axios from "axios";
 import FormData from "form-data";
 import fs from "fs";
-import { customAlphabet } from "nanoid";
+// import { customAlphabet } from "nanoid";
 
 import fsp from "fs/promises";
 export const deleteFile = async (filePath: string): Promise<void> => {
@@ -52,13 +52,18 @@ export async function uploadFile(filePath: string, uploadUrl: string) {
   }
 }
 
-// Generate 2 uppercase letters
-const generateLetters = customAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 2);
+const ShortUniqueId = require("short-unique-id");
 
-// Generate 8 digits
-const generateDigits = customAlphabet("0123456789", 8);
+const letterGen = new ShortUniqueId({
+  length: 3,
+  dictionary: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),
+});
 
-// Final patient ID generator
+const digitGen = new ShortUniqueId({
+  length: 5,
+  dictionary: "0123456789".split(""),
+});
+
 export function generatePatientId() {
-  return `${generateLetters()}${generateDigits()}`; // e.g., 'AB12345678'
+  return `${letterGen.randomUUID()}${digitGen.randomUUID()}`; // 'ABC12345'
 }

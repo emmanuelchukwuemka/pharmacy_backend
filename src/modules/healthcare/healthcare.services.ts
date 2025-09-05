@@ -1,9 +1,10 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { HealthcareUser } from "./healthcare.models";
+import { HealthcareUser, PatientData } from "./healthcare.models";
 import {
   HealthcareUserInput,
   HealthcareLoginInput,
+  CreatePatientInput,
 } from "./healthcare.validations";
 import { CustomError } from "./healthcare.helpers";
 import { Op } from "sequelize";
@@ -74,6 +75,20 @@ export const healthcareLogin = async (data: HealthcareLoginInput) => {
           bloomzonUserId: user.bloomzonUserId,
         },
       },
+    };
+  } catch (error: any) {
+    throw new CustomError(error.message || error, error.statusCode || 500);
+  }
+};
+
+export const createPatient = async (data: CreatePatientInput) => {
+  const newPatient = await PatientData.create({ ...data });
+  delete newPatient.medicalHistory;
+  try {
+    return {
+      success: true,
+      message: "Login successful!",
+      data: newPatient,
     };
   } catch (error: any) {
     throw new CustomError(error.message || error, error.statusCode || 500);

@@ -33,6 +33,7 @@
     "nanoid": "^5.1.5",
     "nodemailer": "^7.0.5",
     "sequelize": "^6.37.7",
+    "short-unique-id": "^5.3.2",
     "socket.io": "^4.8.1",
     "stripe": "^18.3.0",
     "uuid": "^11.0.5",

@@ -48,11 +48,11 @@ LabReport.init(
       onDelete: "CASCADE",
     },
     patientId: {
-      type: DataTypes.UUID,
+      type: DataTypes.STRING(10),
       allowNull: false,
       references: {
         model: "patients",
-        key: "id",
+        key: "patientId",
       },
       onDelete: "CASCADE",
     },

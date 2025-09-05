@@ -95,7 +95,7 @@ export const setupAssociations = () => {
   });
 
   LabResult.belongsTo(TestPanelComponent, {
-    foreignKey: "reportId",
-    as: "labReport",
+    foreignKey: "componentId",
+    as: "TestPanelComponent",
   });
 };
