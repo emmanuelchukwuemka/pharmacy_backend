@@ -5,6 +5,7 @@ import { LabResult } from "./lab/lab_models/LabResults.model";
 import { LabTestsCatalogue } from "./lab/lab_models/LabTestsCatalogue.model";
 import { LabUser } from "./lab/lab_models/LabUser";
 import { LabUserSettings } from "./lab/lab_models/LabUserSettings";
+import { MedicalReport } from "./lab/lab_models/MedicalReport";
 import { TestPanelComponent } from "./lab/lab_models/TestPanelComponents";
 
 export const setupAssociations = () => {
@@ -59,6 +60,16 @@ export const setupAssociations = () => {
     as: "TestPanelComponents",
   });
 
+  MedicalReport.hasMany(PatientData, {
+    foreignKey: "patientId",
+    as: "PatientData",
+  });
+
+  MedicalReport.hasMany(LabTestsCatalogue, {
+    foreignKey: "id",
+    as: "TestData",
+  });
+
   LabTestsCatalogue.belongsTo(LabUser, {
     foreignKey: "labId",
     as: "LabUserData",
@@ -97,5 +108,15 @@ export const setupAssociations = () => {
   LabResult.belongsTo(TestPanelComponent, {
     foreignKey: "componentId",
     as: "TestPanelComponent",
+  });
+
+  PatientData.belongsTo(MedicalReport, {
+    foreignKey: "patientId",
+    as: "medicalReport",
+  });
+
+  LabTestsCatalogue.belongsTo(MedicalReport, {
+    foreignKey: "id",
+    as: "medicalReport",
   });
 };

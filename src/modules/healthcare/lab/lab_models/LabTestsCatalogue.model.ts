@@ -20,7 +20,7 @@ export interface LabTestsCatalogueAttributes {
 export interface LabTestsCatalogueCreationAttributes
   extends Optional<
     LabTestsCatalogueAttributes,
-    "tat" | "preparationInstructions"
+    "id" | "tat" | "preparationInstructions"
   > {}
 
 export class LabTestsCatalogue

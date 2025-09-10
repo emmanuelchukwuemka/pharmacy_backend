@@ -87,7 +87,7 @@ export const createPatient = async (data: CreatePatientInput) => {
   try {
     return {
       success: true,
-      message: "Login successful!",
+      message: "Patient creation successful!",
       data: newPatient,
     };
   } catch (error: any) {
