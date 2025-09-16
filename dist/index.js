@@ -10,7 +10,7 @@ const socket_io_1 = require("socket.io");
 const socket_1 = require("./src/loaders/socket");
 const db_1 = __importDefault(require("./src/config/database/db"));
 const App_1 = __importDefault(require("./src/App"));
-const port = process.env.APP_PORT_NUMBER || 3000;
+const port = process.env.PORT || process.env.APP_PORT_NUMBER || 3000;
 // Creating HTTP server from Express app here
 const server = http_1.default.createServer(App_1.default);
 // And here am initializing Socket.IO

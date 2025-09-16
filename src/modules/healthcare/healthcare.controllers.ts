@@ -45,6 +45,8 @@ export const healthcareSignUp = async (req: Request, res: Response) => {
   }
 };
 
+
+
 export const healthcareLogin = async (req: Request, res: Response) => {
   try {
     const validatedData: HealthcareLoginInput = healthcareLoginSchema.parse(
@@ -90,6 +92,46 @@ export const createPatient = async (req: Request, res: Response) => {
       });
     }
 
+    return errorResponse(res, {
+      statusCode: err.statusCode || 500,
+      message: err.message || "Unexpected error",
+      details: process.env.NODE_ENV === "development" ? err.stack : undefined,
+    });
+  }
+};
+
+export const healthcareVerifyEmail = async (req: Request, res: Response) => {
+  try {
+    const { token } = req.body;
+
+    if (!token) {
+      return errorResponse(res, {
+        statusCode: 400,
+        message: "Verification token is required",
+      });
+    }
+
+    const user = await healthcareServices.verifyEmail(token);
+
+    if (!user) {
+      return errorResponse(res, {
+        statusCode: 400,
+        message: "Invalid or expired verification token",
+      });
+    }
+
+    return successResponse(res, {
+      message: "Email verified successfully. Your account is now active.",
+      data: {
+        user: {
+          id: user.id,
+          email: user.email,
+          fullName: user.fullName,
+          bloomzonUserId: user.bloomzonUserId,
+        },
+      },
+    });
+  } catch (err: any) {
     return errorResponse(res, {
       statusCode: err.statusCode || 500,
       message: err.message || "Unexpected error",

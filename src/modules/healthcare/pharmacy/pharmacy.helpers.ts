@@ -16,7 +16,7 @@ export const verifyPassword = async (password: string, hashedPassword: string): 
 // JWT token generation helper
 export const generateToken = (payload: object): string => {
   const secret = process.env.JWT_SECRET || "default_secret";
-  const expiresIn = process.env.JWT_EXPIRES_IN || "24h";
+  const expiresIn = 86400; // 24 hours in seconds
   return jwt.sign(payload, secret, { expiresIn });
 };
 

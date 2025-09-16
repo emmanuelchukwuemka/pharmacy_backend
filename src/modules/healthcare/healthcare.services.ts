@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { nanoid } from "nanoid";
 import { HealthcareUser, PatientData } from "./healthcare.models";
 import {
   HealthcareUserInput,
@@ -7,6 +8,7 @@ import {
   CreatePatientInput,
 } from "./healthcare.validations";
 import { CustomError } from "./healthcare.helpers";
+import { emailService } from "../../globals/utility/email";
 import { Op } from "sequelize";
 
 export const healthcareSignUp = async (data: HealthcareUserInput) => {
@@ -19,23 +21,28 @@ export const healthcareSignUp = async (data: HealthcareUserInput) => {
     }
 
     const hashedPassword = await bcrypt.hash(data.password, 10);
+    const verificationToken = nanoid(32);
 
     const newUser = await HealthcareUser.create({
       ...data,
       password: hashedPassword,
+      verificationToken,
+      isVerified: false,
+      isActive: false,
     });
 
-    const token = jwt.sign(
-      { userId: newUser.id, email: newUser.email },
-      process.env.JWT_SECRET!,
-      { expiresIn: "7d" }
-    );
+    // Send verification email
+    try {
+      await emailService.sendVerificationEmail(newUser.email, verificationToken);
+    } catch (emailError) {
+      console.error("Failed to send verification email:", emailError);
+      // Don't fail registration if email fails, but log it
+    }
 
     return {
       success: true,
-      message: "User successfully registered on Bloomzon Healthcare...",
+      message: "User successfully registered on Bloomzon Healthcare. Please check your email for verification instructions.",
       data: {
-        token,
         user: {
           id: newUser.id,
           email: newUser.email,
@@ -49,6 +56,37 @@ export const healthcareSignUp = async (data: HealthcareUserInput) => {
   }
 };
 
+export const verifyEmail = async (token: string) => {
+  try {
+    const user = await HealthcareUser.findOne({
+      where: { verificationToken: token },
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    // Check if token is expired (24 hours)
+    const tokenAge = Date.now() - user.createdAt.getTime();
+    const twentyFourHours = 24 * 60 * 60 * 1000;
+
+    if (tokenAge > twentyFourHours) {
+      return null;
+    }
+
+    // Update user as verified and active
+    await user.update({
+      isVerified: true,
+      isActive: true,
+      verificationToken: null, // Clear the token
+    });
+
+    return user;
+  } catch (error: any) {
+    throw new CustomError(error.message || error, error.statusCode || 500);
+  }
+};
+
 export const healthcareLogin = async (data: HealthcareLoginInput) => {
   try {
     const user = await HealthcareUser.findOne({ where: { email: data.email } });
@@ -56,6 +94,14 @@ export const healthcareLogin = async (data: HealthcareLoginInput) => {
 
     const isMatch = await bcrypt.compare(data.password, user.password);
     if (!isMatch) throw new CustomError("Invalid email or password", 401);
+
+    if (!user.isVerified) {
+      throw new CustomError("Please verify your email before logging in", 403);
+    }
+
+    if (!user.isActive) {
+      throw new CustomError("Account is not active", 403);
+    }
 
     const token = jwt.sign(
       { userId: user.id, email: user.email },

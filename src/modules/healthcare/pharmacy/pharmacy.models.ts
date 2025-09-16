@@ -89,6 +89,14 @@ Pharmacy.init(
       allowNull: false,
       defaultValue: 'pending',
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
   },
   {
     sequelize,
@@ -237,6 +245,14 @@ Medicine.init(
         key: 'id',
       },
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
   },
   {
     sequelize,
@@ -334,6 +350,14 @@ Inventory.init(
         model: Pharmacy,
         key: 'id',
       },
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
     },
   },
   {

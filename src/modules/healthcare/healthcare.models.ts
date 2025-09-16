@@ -9,10 +9,15 @@ export interface HealthcareUserAttributes {
   phone: string;
   password: string;
   fullName: string;
+  isVerified: boolean;
+  isActive: boolean;
+  verificationToken?: string | null;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface HealthcareUserCreationAttributes
-  extends Optional<HealthcareUserAttributes, "id"> {}
+  extends Optional<HealthcareUserAttributes, "id" | "isVerified" | "isActive" | "verificationToken" | "createdAt" | "updatedAt"> {}
 
 export class HealthcareUser
   extends Model<HealthcareUserAttributes, HealthcareUserCreationAttributes>
@@ -24,6 +29,11 @@ export class HealthcareUser
   public phone!: string;
   public password!: string;
   public fullName!: string;
+  public isVerified!: boolean;
+  public isActive!: boolean;
+  public verificationToken?: string;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 HealthcareUser.init(
@@ -54,6 +64,28 @@ HealthcareUser.init(
     },
     fullName: {
       type: DataTypes.STRING(100),
+      allowNull: false,
+    },
+    isVerified: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    verificationToken: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
       allowNull: false,
     },
   },

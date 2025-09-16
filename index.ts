@@ -6,7 +6,7 @@ import { initSocket } from "./src/loaders/socket";
 import pool from "./src/config/database/db";
 import app from "./src/App";
 
-const port = process.env.APP_PORT_NUMBER || 3000;
+const port = process.env.PORT || process.env.APP_PORT_NUMBER || 3000;
 
 // Creating HTTP server from Express app here
 const server = http.createServer(app);

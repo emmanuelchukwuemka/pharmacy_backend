@@ -4,6 +4,7 @@ import * as healthcareControllers from "./healthcare.controllers";
 const router = Router();
 // router.post("/", healthcareControllers.sample);
 router.post("/sign-up", healthcareControllers.healthcareSignUp);
+router.post("/verify-email", healthcareControllers.healthcareVerifyEmail);
 router.post("/login", healthcareControllers.healthcareLogin);
 router.post("/create-patient", healthcareControllers.createPatient);
 
