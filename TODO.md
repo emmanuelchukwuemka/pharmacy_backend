@@ -1,27 +1,15 @@
-# Email Verification for Healthcare Sign-Up
+# TODO for Healthcare Sign-Up Email Verification Feature
 
-## Information Gathered
-- Healthcare sign-up endpoint at `/api/healthcare/sign-up`
-- User model needed fields for verification status and token
-- Email service utility available for sending verification emails
-- Need to add verification endpoint and update login flow
+- [x] Update HealthcareUser model to add isVerified, isActive, verificationToken fields
+- [x] Modify healthcareSignUp service to generate verification token and send verification email
+- [x] Add verifyEmail service to verify user by token and activate account
+- [x] Update healthcareLogin service to check for verified and active user status
+- [x] Add healthcareVerifyEmail controller to handle verification requests
+- [x] Add /verify-email route in healthcare.routes.ts
+- [ ] Write integration tests for sign-up and email verification flow
+- [ ] Test the full sign-up, email verification, and login process manually
+- [ ] Fix any issues found during testing
 
-## Plan
-1. Update HealthcareUser model to include isVerified, isActive, and verificationToken fields
-2. Modify healthcareSignUp service to generate verification token and send email
-3. Add verifyEmail service function with token validation and expiration check
-4. Update healthcareLogin to check verification status
-5. Add healthcareVerifyEmail controller and route
-6. Test the complete sign-up and verification flow
-
-## Dependent Files to be edited
-- `src/modules/healthcare/healthcare.models.ts` - Add verification fields
-- `src/modules/healthcare/healthcare.services.ts` - Add token generation, email sending, and verification logic
-- `src/modules/healthcare/healthcare.controllers.ts` - Add verify email controller
-- `src/modules/healthcare/healthcare.routes.ts` - Add verify email route
-
-## Followup steps
-- Test sign-up endpoint to ensure email is sent
-- Test verify-email endpoint with valid and invalid tokens
-- Test login with unverified account
-- Ensure database migrations if needed for new fields
+Next steps:
+- Implement integration tests in tests/ directory
+- Run tests and verify functionality
