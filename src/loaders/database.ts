@@ -4,8 +4,8 @@ import pool from "../config/database/db"; // MySQL2 raw connection
 export async function syncedDB() {
   try {
     // await sequelize.sync();
-    // await sequelize.sync({ force: true }); // force: true will drop the table if it exists and recreate it
-    await sequelize.sync({ alter: true });
+    await sequelize.sync({ force: true }); // force: true will drop the table if it exists and recreate it
+    // await sequelize.sync({ alter: true });
     console.log("Database & tables have been created!".cyan);
   } catch (error) {
     console.error("Error syncing the database:", error);

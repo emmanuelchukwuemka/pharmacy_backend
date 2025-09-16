@@ -76,6 +76,7 @@ export const registerPharmacy = async (data: PharmacyRegisterInput) => {
     return {
       success: false,
       message: error instanceof Error ? error.message : "Pharmacy registration failed",
+      data: null,
     };
   }
 };
@@ -86,13 +87,17 @@ export const getPharmacyProfile = async (pharmacyId: number) => {
     // This would typically query the database for pharmacy details
 
     return {
-      id: pharmacyId,
-      name: "Sample Pharmacy",
-      email: "sample@pharmacy.com",
-      licenseNumber: "PHARM-12345",
-      address: "123 Health Street",
-      phone: "+1234567890",
-      status: "verified"
+      success: true,
+      message: "Pharmacy profile retrieved successfully",
+      data: {
+        id: pharmacyId,
+        name: "Sample Pharmacy",
+        email: "sample@pharmacy.com",
+        licenseNumber: "PHARM-12345",
+        address: "123 Health Street",
+        phone: "+1234567890",
+        status: "verified"
+      }
     };
   } catch (error) {
     console.error("Get pharmacy profile error:", error);
@@ -106,10 +111,14 @@ export const updatePharmacyProfile = async (pharmacyId: number, data: PharmacyRe
     // This would typically update the database record
 
     return {
-      id: pharmacyId,
-      name: data.name,
-      email: data.email,
-      updated: true
+      success: true,
+      message: "Pharmacy profile updated successfully",
+      data: {
+        id: pharmacyId,
+        name: data.name,
+        email: data.email,
+        updated: true
+      }
     };
   } catch (error) {
     console.error("Update pharmacy profile error:", error);
@@ -126,9 +135,13 @@ export const verifyLicense = async (data: any) => {
     // 3. Update verification status
 
     return {
-      verificationId: "VER-12345",
-      status: "under_review",
-      submittedAt: new Date().toISOString()
+      success: true,
+      message: "License verification submitted",
+      data: {
+        verificationId: "VER-12345",
+        status: "under_review",
+        submittedAt: new Date().toISOString()
+      }
     };
   } catch (error) {
     console.error("License verification error:", error);
@@ -183,6 +196,7 @@ export const verifyEmail = async (token: string) => {
     return {
       success: false,
       message: error instanceof Error ? error.message : "Email verification failed",
+      data: null,
     };
   }
 };
@@ -194,7 +208,7 @@ import Order from "./pharmacy_models/Order.model";
 import OrderItem from "./pharmacy_models/OrderItem.model";
 import AuditLog from "./pharmacy_models/AuditLog.model";
 import MedicineInteraction from "./pharmacy_models/MedicineInteraction.model";
-import { Op } from "sequelize";
+import { Op, fn, col } from "sequelize";
 
 // Medicine Management Services
 export const addMedicine = async (pharmacyId: number, data: PharmacyMedicineInput) => {
@@ -274,6 +288,7 @@ export const getMedicines = async (pharmacyId: number, options: any) => {
     return {
       success: false,
       message: error instanceof Error ? error.message : "Failed to fetch medicines",
+      data: null,
     };
   }
 };
@@ -312,6 +327,7 @@ export const updateMedicine = async (pharmacyId: number, medicineId: number, dat
     return {
       success: false,
       message: error instanceof Error ? error.message : "Failed to update medicine",
+      data: null,
     };
   }
 };
@@ -347,6 +363,7 @@ export const deleteMedicine = async (pharmacyId: number, medicineId: number) => 
     return {
       success: false,
       message: error instanceof Error ? error.message : "Failed to delete medicine",
+      data: null,
     };
   }
 };
@@ -369,6 +386,7 @@ export const addInventory = async (pharmacyId: number, data: any) => {
     return {
       success: false,
       message: error instanceof Error ? error.message : "Failed to add inventory",
+      data: null,
     };
   }
 };
@@ -415,6 +433,7 @@ export const getInventory = async (pharmacyId: number, options: any) => {
     return {
       success: false,
       message: error instanceof Error ? error.message : "Failed to fetch inventory",
+      data: null,
     };
   }
 };
@@ -441,6 +460,7 @@ export const updateInventory = async (pharmacyId: number, inventoryId: number, d
     return {
       success: false,
       message: error instanceof Error ? error.message : "Failed to update inventory",
+      data: null,
     };
   }
 };
@@ -475,6 +495,7 @@ export const verifyPrescription = async (pharmacyId: number, data: any) => {
     return {
       success: false,
       message: error instanceof Error ? error.message : "Prescription verification failed",
+      data: null,
     };
   }
 };
@@ -513,6 +534,7 @@ export const getPrescriptions = async (pharmacyId: number, options: any) => {
     return {
       success: false,
       message: error instanceof Error ? error.message : "Failed to fetch prescriptions",
+      data: null,
     };
   }
 };
@@ -561,6 +583,7 @@ export const getOrders = async (pharmacyId: number, options: any) => {
     return {
       success: false,
       message: error instanceof Error ? error.message : "Failed to fetch orders",
+      data: null,
     };
   }
 };
@@ -600,6 +623,7 @@ export const processOrder = async (pharmacyId: number, orderId: number, data: an
     return {
       success: false,
       message: error instanceof Error ? error.message : "Order processing failed",
+      data: null,
     };
   }
 };
@@ -639,6 +663,7 @@ export const shipOrder = async (pharmacyId: number, orderId: number, data: any) 
     return {
       success: false,
       message: error instanceof Error ? error.message : "Order shipping failed",
+      data: null,
     };
   }
 };
@@ -671,8 +696,8 @@ export const getDashboardAnalytics = async (pharmacyId: number, period: string) 
         createdAt: { [Op.between]: [startDate, endDate] },
       },
       attributes: [
-        [Order.sequelize?.fn("COUNT", Order.sequelize?.col("id")), "totalOrders"],
-        [Order.sequelize?.fn("SUM", Order.sequelize?.col("totalAmount")), "totalRevenue"],
+        [fn("COUNT", col("id")), "totalOrders"],
+        [fn("SUM", col("totalAmount")), "totalRevenue"],
       ],
       raw: true,
     });
@@ -706,6 +731,7 @@ export const getDashboardAnalytics = async (pharmacyId: number, period: string) 
     return {
       success: false,
       message: error instanceof Error ? error.message : "Failed to fetch analytics",
+      data: null,
     };
   }
 };
@@ -721,12 +747,12 @@ export const getSalesAnalytics = async (pharmacyId: number, options: any) => {
         status: "completed",
       },
       attributes: [
-        [Order.sequelize?.fn("DATE", Order.sequelize?.col("createdAt")), "date"],
-        [Order.sequelize?.fn("COUNT", Order.sequelize?.col("id")), "orders"],
-        [Order.sequelize?.fn("SUM", Order.sequelize?.col("totalAmount")), "revenue"],
+        [fn("DATE", col("createdAt")), "date"],
+        [fn("COUNT", col("id")), "orders"],
+        [fn("SUM", col("totalAmount")), "revenue"],
       ],
-      group: [Order.sequelize?.fn("DATE", Order.sequelize?.col("createdAt"))],
-      order: [[Order.sequelize?.fn("DATE", Order.sequelize?.col("createdAt")), "ASC"]],
+      group: [fn("DATE", col("createdAt"))],
+      order: [[fn("DATE", col("createdAt")), "ASC"]],
       raw: true,
     });
 
@@ -743,6 +769,7 @@ export const getSalesAnalytics = async (pharmacyId: number, options: any) => {
     return {
       success: false,
       message: error instanceof Error ? error.message : "Failed to fetch sales analytics",
+      data: null,
     };
   }
 };
@@ -791,6 +818,7 @@ export const getComplianceReports = async (pharmacyId: number, options: any) => 
     return {
       success: false,
       message: error instanceof Error ? error.message : "Failed to fetch compliance reports",
+      data: null,
     };
   }
 };
@@ -833,6 +861,7 @@ export const getAuditTrail = async (pharmacyId: number, options: any) => {
     return {
       success: false,
       message: error instanceof Error ? error.message : "Failed to fetch audit trail",
+      data: null,
     };
   }
 };
@@ -866,6 +895,7 @@ export const checkMedicineInteractions = async (medicineIds: number[]) => {
     return {
       success: false,
       message: error instanceof Error ? error.message : "Interaction check failed",
+      data: null,
     };
   }
 };

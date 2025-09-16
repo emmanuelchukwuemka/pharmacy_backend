@@ -6,7 +6,7 @@ import { setupAssociations } from "../modules/healthcare/healthcare.models.assoc
 
 export default async (app: Application): Promise<void> => {
   await dbLoader();
-  // await syncedDB();
+  // await syncedDB(); // Commented out to use existing database schema
 
   // set up sequelize model associations here
   setupAssociations();
