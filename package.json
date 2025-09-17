@@ -7,11 +7,17 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon",
     "build": "tsc && npx copyfiles .env dist",
-    "start": "npm run build && node dist/index.js",
+    "start": "node dist/index.js",
+    "start:build": "npm run build && npm start",
+    "build:verify": "npm run build && node -e \"console.log('Build verification successful')\"",
     "module-init": "plop --plopfile scripts/plopfile.silo.js"
   },
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
   "dependencies": {
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",

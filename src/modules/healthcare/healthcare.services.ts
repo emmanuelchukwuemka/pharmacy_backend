@@ -1,6 +1,5 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { nanoid } from "nanoid";
 import { HealthcareUser, PatientData } from "./healthcare.models";
 import {
   HealthcareUserInput,
@@ -21,6 +20,7 @@ export const healthcareSignUp = async (data: HealthcareUserInput) => {
     }
 
     const hashedPassword = await bcrypt.hash(data.password, 10);
+    const { nanoid } = await import('nanoid');
     const verificationToken = nanoid(32);
 
     const newUser = await HealthcareUser.create({

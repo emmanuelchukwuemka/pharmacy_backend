@@ -2,7 +2,6 @@ import { PharmacyRegisterInput, PharmacyMedicineInput } from "./pharmacy.validat
 import Pharmacy from "./pharmacy_models/Pharmacy.model";
 import User from "./pharmacy_models/User.model";
 import bcrypt from "bcrypt";
-import { nanoid } from "nanoid";
 
 export const registerPharmacy = async (data: PharmacyRegisterInput) => {
   try {
@@ -25,6 +24,7 @@ export const registerPharmacy = async (data: PharmacyRegisterInput) => {
     }
 
     // Generate verification token
+    const { nanoid } = await import('nanoid');
     const verificationToken = nanoid(32);
 
     // Create pharmacy record
